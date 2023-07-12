@@ -1,12 +1,15 @@
 # Press Shift+F10 to execute it or replace it with your code.
+
 import os
+import requests
+import bs4
 
 welcome_mantra = """The non-doing of any evil,
 the performance of what's skillful,
 the cleansing of one's own mind:
     this is the teaching
     of the Awakened."""
-copy = ['thanissaro bhikku', 1997]
+copy = ['thanissaro bhikku', '1997']
 cname = copy[0]
 cyear = copy[1]
 
@@ -19,16 +22,34 @@ print(welcome)
 print()
 print(welcome_mantra)
 
+sindex = requests.get('https://www.accesstoinsight.org/index-sutta.html')
+sindex.raise_for_status()
+playFile = open('SuttaIndex.html', 'wb')
+for chunk in sindex.iter_content(100000):
+    playFile.write(chunk)
+playFile.close()
+indexsoup = bs4.BeautifulSoup(sindex.text, 'html.parser')
+elems = indexsoup.select('ul.index:nth-child(7)')
+
+def copy():
+    print("Copyright " + cyear + " " + cname.title())
+    print("The text of this page is licensed under a Creative Commons Attribution-NonCommercial 4.0 International "
+          "License. To view a copy of the license, visit www.creativecommons.org/licenses/by-nc/4.0.")
+    print("From Access to Insight: www.accesstoinsight.org.")
+
+
 choice = input("What would you like to see? Options are: help, copyright, sutta.")
 if choice == 'sutta':
-    sutta_choice = input("Please enter a letter to display a section of the index corresponding to that letter.")
+    sutta_choice = input('Please enter a letter to display a section of the index corresponding to that letter.')
+    if sutta_choice == 'A':
+        print(elems)
 if choice == 'help':
     print("options")
+if choice == 'source':
+    print("ph")
 if choice == 'copyright':
-    print("Copyright " + cyear + cname.title())
+    copy()
 else:
     print(
-        'An input was deteced that was not among those listed by the program; if you wish to exit the program, you can interruprt the process by pressing cntrl+c.')
-
-if sutta_choice == 'a':
-    sutta_a = input("Please select one from the following:")
+        'An input was detected that was not among those listed by the program; if you wish to exit the program, '
+        'you can interrupt the process by pressing ctrl+c.')
