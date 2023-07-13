@@ -1,6 +1,7 @@
 import os
-import requests
-import bs4
+import requests #for grabbing webpages
+import bs4 #beautiful soup
+import re #for filtering text
 
 welcome_mantra = """The non-doing of any evil,
 the performance of what's skillful,
@@ -22,7 +23,7 @@ print(welcome_mantra)
 print()
 
 
-def copy():
+def show_copy():
     print("Copyright " + cyear + " " + cname.title())
     print("The text of this page is licensed under a Creative Commons Attribution-NonCommercial 4.0 International "
           "License. To view a copy of the license, visit www.creativecommons.org/licenses/by-nc/4.0.")
@@ -33,37 +34,27 @@ choice = input("What would you like to see? Options are: help, copyright, sutta.
 if choice == 'sutta':
     sutta_choice = input('Please enter a letter to display a section of the index corresponding to that letter.')
     if sutta_choice == 'A':
-        print("Retrieving...")
+        snum1 = ord('%s' % sutta_choice)
+        snum = snum1 - 58 # Index of Suttas starts with the html nth-child at 7, so we need to write an equation to get A to equal 7.
+        sindex = requests.get('https://www.accesstoinsight.org/index-sutta.html')
+        sindex.raise_for_status()
+        playFile = open('SuttaIndex.html', 'wb')
+        for chunk in sindex.iter_content(100000):
+            playFile.write(chunk)
+        playFile.close()
+        indexsoup = bs4.BeautifulSoup(sindex.text, 'html.parser')
+        elems = indexsoup.select('ul.index:nth-child(%s)' % snum)
+        print(elems)
+        SearchStr = '>(.*?)<'
+        cleanedelems = re.search(SearchStr.decode('utf.8'), htmlString.decode('utf-8'), re.I | re.U)
+        print (cleanedelems.groups())
 if choice == 'help':
     print("options")
 if choice == 'source':
     print("ph")
 if choice == 'copyright':
-    copy()
+    show_copy()
 else:
     print(
         'An input was detected that was not among those listed by the program; if you wish to exit the program, '
         'you can interrupt the process by pressing ctrl+c.')
-
-# Index of Suttas starts with the html nth-child at 7, so we need to write an equation to get A to equal 7.
-suttanum = ( - 58)
-print(suttanum)
-
-
-def getnum(suttanum):
-    snum = ord('%s' % sutta_choice)
-    snum = snum - 58
-
-
-def indexselect(snum):
-    indexsoup.select('ul.index:nth-child(%s)' % suttanum)
-
-sindex = requests.get('https://www.accesstoinsight.org/index-sutta.html')
-sindex.raise_for_status()
-playFile = open('SuttaIndex.html', 'wb')
-for chunk in sindex.iter_content(100000):
-    playFile.write(chunk)
-playFile.close()
-indexsoup = bs4.BeautifulSoup(sindex.text, 'html.parser')
-getnum(sutta_choice)
-elems = indexselect(suttanum)
