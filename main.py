@@ -37,9 +37,8 @@ choice = input("What would you like to see? Options are: help, copyright, sutta.
 if choice == 'sutta':
     sutta_choice = input('Please enter a letter to display a section of the index corresponding to that letter. ')
     snum1 = ord('%s' % sutta_choice)
-    # vvv Broken vvv
     snum2 = snum1 - 58
-    snum = snum2 + ((snum1 - 7) * 2)
+    snum = snum2 + ((snum2 - 7) * 2)
     # ^ Index of Suttas starts with the html nth-child at 7, so we need to write an equation to get A to equal 7. TODO: Explain more.
     sindex = requests.get('https://www.accesstoinsight.org/index-sutta.html') #sets var equal to webpage
     sindex.raise_for_status()
