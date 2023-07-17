@@ -1,7 +1,4 @@
-import os
-import requests #for grabbing webpages
-import bs4 #beautiful soup
-import re #for filtering text
+import os, bs4, re, requests
 
 ### From what I can tell, Access to Insight does not have a robots.txt page, and considering this is basically just a \
 ### different way of browing the website one page at a time, I decided to go ahead with this program.
@@ -104,7 +101,10 @@ while True:
             cleancopy = re.sub(r'<(.*?)>', '', str(copyraw))
         # TODO: Separate the "Notes" section from the usual text section of the suttas.
     if choice == 'help':
-        print("options")
+        print("The core functionality of this program is to get different passages from the website 'https://www.accesstoinsight.org/'. To that end," \
+            "you can use the 'sutta' command upon entering the program to get an index of the suttas available on the website by letter. Simply" \
+            "follow the instructions when prompted, and suttas should be displayed as intended. If there are any issues, you can report them on the application's" \
+            "github page: 'https://github.com/ehynnek/accesstoinsight-cli/issues'.")
     if choice == 'source':
         print("ph")
     if choice == 'copyright':
